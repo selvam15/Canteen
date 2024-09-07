@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canteen Products</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="icon" href="https://openclipart.org/image/800px/289282">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        header {
+            background-color: rgb(255, 47, 47);
+            color: #fff;
+            padding: 1rem 0;
+            position: relative;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 1rem;
+        }
+        
+        .logo a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: bolder;
+        }
+
+        .search-bar {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 600px;
+            margin-top: 60px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+        }
+        
+        .products {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 2rem;
+        }
+        
+        .product-card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 1rem;
+            padding: 1rem;
+            text-align: center;
+            width: 200px;
+        }
+        
+        .product-card img {
+            max-width: 80%;
+            border-radius: 5px;
+        }
+        
+        .order-btn {
+            background-color: #28a745;
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .order-btn:hover {
+            background-color: #218838;
+        }
+
+        /* QR Code Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 300px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        .modal img {
+            max-width: 100%;
+        }
+
+        .close-btn {
+            background-color: #333;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        .close-btn:hover {
+            background-color: #555;
+        }
+
+        .menu-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgb(255, 3, 24);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px 0;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+        
+        .menu-bar a {
+            text-decoration: none;
+            color: white;
+            font-size: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .menu-bar a i {
+            font-size: 24px;
+        }
+        
+        .menu-bar a:hover {
+            color: #f0f0f0;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .menu-bar a {
+                font-size: 12px;
+            }
+        
+            .menu-bar a i {
+                font-size: 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .menu-bar {
+                padding: 8px 0;
+            }
+        
+            .menu-bar a {
+                font-size: 10px;
+            }
+        
+            .menu-bar a i {
+                font-size: 18px;
+            }
+        }
+        
+        .qr-code {
+            display: none;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo"><a href="#">Canteen</a></div>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search for products...">
+            </div>
+        </nav>
+    </header>
+    <main>
+        <section class="products" id="productList">
+            <!-- Products -->
+            <div class="product-card">
+                <img src="https://www.allrecipes.com/thmb/5JVfA7MxfTUPfRerQMdF-nGKsLY=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/25473-the-perfect-basic-burger-DDMFS-4x3-56eaba3833fd4a26a82755bcd0be0c54.jpg" alt="Burger">
+                <h3>Burger</h3>
+                <p>$5.99</p>
+                <button class="order-btn" data-product="Burger" data-price="5.99">Order</button>
+                <img src="qrcode.png" alt="QR Code" class="qr-code" data-product="Burger">
+            </div>
+            <div class="product-card">
+                <img src="https://www.allrecipes.com/thmb/fFW1o307WSqFFYQ3-QXYVpnFj6E=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/48727-Mikes-homemade-pizza-DDMFS-beauty-4x3-BG-2974-a7a9842c14e34ca699f3b7d7143256cf.jpg" alt="Pizza">
+                <h3>Pizza</h3>
+                <p>$8.99</p>
+                <button class="order-btn" data-product="Pizza" data-price="8.99">Order</button>
+                <img src="qrcode.png" alt="QR Code" class="qr-code" data-product="Pizza">
+            </div>
+            <!-- Indian and Tamil Nadu Foods -->
+            <div class="product-card">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRB6LUswYhEpzZPjXeGJNtdUKPYeCuGz0JoBQ&s" alt="Dosa">
+                <h3>Dosa</h3>
+                <p>$3.99</p>
+                <button class="order-btn" data-product="Dosa" data-price="3.99">Order</button>
+                <img src="qrcode.png" alt="QR Code" class="qr-code" data-product="Dosa">
+            </div>
+            <div class="product-card">
+                <img src="https://pipingpotcurry.com/wp-content/uploads/2017/03/Sambar-in-Instant-Pot-Piping-Pot-Curry.jpg" alt="Sambar">
+                <h3>Sambar</h3>
+                <p>$4.99</p>
+                <button class="order-btn" data-product="Sambar" data-price="4.99">Order</button>
+                <img src="qrcode.png" alt="QR Code" class="qr-code" data-product="Sambar">
+            </div>
+            <div class="product-card">
+                <img src="https://www.awesomecuisine.com/wp-content/uploads/2007/11/Idli-with-sambar-and-chutney.jpg" alt="Idli">
+                <h3>Idli</h3>
+                <p>$2.99</p>
+                <button class="order-btn" data-product="Idli" data-price="2.99">Order</button>
+                <img src="qrcode.png" alt="QR Code" class="qr-code" data-product="Idli">
+            </div>
+            <div class="product-card">
+                <img src="https://www.kannammacooks.com/wp-content/uploads/street-style-chicken-rice-recipe-1-3.jpg" alt="Chole Bhature">
+                <h3>Chicken Rice</h3>
+                <p>$6.99</p>
+                <button class="order-btn" data-product="Chole Bhature" data-price="6.99">Order</button>
+                <img src="qrcode.png" alt="QR Code" class="qr-code" data-product="Chole Bhature">
+            </div>
+            <div class="product-card">
+                <img src="https://www.licious.in/blog/wp-content/uploads/2023/01/Shutterstock_2047827035.jpg" alt="Chicken Biryani">
+                <h3>Chicken Biryani</h3>
+                <p>$9.99</p>
+                <button class="order-btn" data-product="Chicken Biryani" data-price="9.99">Order</button>
+                <img src="qrcode.png" alt="QR Code" class="qr-code" data-product="Chicken Biryani">
+            </div>
+            <div class="product-card">
+                <img src="https://vegecravings.com/wp-content/uploads/2017/04/paneer-butter-masala-recipe-step-by-step-instructions.jpg" alt="Paneer Butter Masala">
+                <h3>Paneer Butter Masala</h3>
+                <p>$7.99</p>
+                <button class="order-btn" data-product="Paneer Butter Masala" data-price="7.99">Order</button>
+                <img src="qrcode.png" alt="QR Code" class="qr-code" data-product="Paneer Butter Masala">
+            </div>
+            <div class="product-card">
+                <img src="https://img.freepik.com/premium-photo/chapathi-with-vegetable-curry_931559-307.jpg" alt="Chapathi">
+                <h3>Chapathi</h3>
+                <p>$2.49</p>
+                <button class="order-btn" data-product="Chapathi" data-price="2.49">Order</button>
+                <img src="qrcode.png" alt="QR Code" class="qr-code" data-product="Chapathi">
+            </div>
+            <div class="product-card">
+                <img src="https://www.authenticroyal.com/wp-content/uploads/2016/11/vegetable-biryani.jpg" alt="Vegetable Biryani">
+                <h3>Vegetable Biryani</h3>
+                <p>$8.49</p>
+                <button class="order-btn" data-product="Vegetable Biryani" data-price="8.49">Order</button>
+                <img src="qrcode.png" alt="QR Code" class="qr-code" data-product="Vegetable Biryani">
+            </div>
+        </section>
+
+        <!-- QR Code Modal -->
+        <div id="qrModal" class="modal">
+            <div class="modal-content">
+                <h3>Scan to Pay</h3>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/QR_code_for_mobile_English_Wikipedia.svg/800px-QR_code_for_mobile_English_Wikipedia.svg.png" alt="QR Code">
+                <button class="close-btn">Close</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Fixed Bottom Menu Bar -->
+    <div class="menu-bar">
+        <a href="index.html">
+            <i class='bx bx-home'></i>
+            <span>Home</span>
+        </a>
+        <a href="product.html">
+            <i class='bx bx-cart'></i>
+            <span>Products</span>
+        </a>
+        <a href="myorder.html">
+            <i class='bx bx-receipt'></i>
+            <span>My Order</span>
+        </a>
+        <a href="profile.html">
+            <i class='bx bx-user'></i>
+            <span>Profile</span>
+        </a>
+    </div>
+
+    <script>
+        document.querySelectorAll('.order-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const product = this.getAttribute('data-product');
+                const price = this.getAttribute('data-price');
+        
+                // Show the QR code modal for payment
+                showQRModal();
+        
+                // Get the current date and time when the order is placed
+                const orderTime = new Date().toLocaleString();
+        
+                // Add order to local storage with the timestamp
+                addToOrders(product, price, 'Awaiting Payment', orderTime);
+            });
+        });
+        
+        // Function to add order to local storage
+        function addToOrders(product, price, status, orderTime) {
+            let orders = JSON.parse(localStorage.getItem('orders')) || [];
+            orders.push({ product, price, status, orderTime });
+            localStorage.setItem('orders', JSON.stringify(orders));
+        }
+        
+        // Function to show QR code modal
+        function showQRModal() {
+            const modal = document.getElementById('qrModal');
+            modal.style.display = 'block';
+        }
+        
+        // Close the QR code modal when the close button is clicked
+        document.querySelector('.close-btn').addEventListener('click', function() {
+            const modal = document.getElementById('qrModal');
+            modal.style.display = 'none';
+        });
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const products = document.querySelectorAll('.product-card');
+            products.forEach(product => {
+                const productName = product.querySelector('h3').textContent.toLowerCase();
+                if (productName.includes(searchTerm)) {
+                    product.style.display = '';
+                } else {
+                    product.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
+

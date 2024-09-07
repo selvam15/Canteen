@@ -1,0 +1,232 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="icon" href="https://openclipart.org/image/800px/289282">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        header {
+            background-color: #dc2424;
+            color: #fff;
+            padding: 1rem 0;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 1rem;
+        }
+        
+        .logo a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: bolder;
+        }
+        
+        .profile-section {
+            display: flex;
+            align-items: center;
+        }
+        
+        .orders-link {
+            color: #fff;
+            text-decoration: none;
+            margin-left: 1rem;
+        }
+        
+        main {
+            padding: 2rem;
+        }
+        
+        .orders {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .orders h1 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        #order-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        #order-list li {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 0.5rem;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+        }
+        
+        #order-list li:nth-child(odd) {
+            background-color: #e9e9e9;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .orders {
+                padding: 1rem;
+            }
+            
+            #order-list li {
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Fixed Bottom Menu Bar */
+.menu-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgb(255, 3, 24);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px 0;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+.menu-bar a {
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.menu-bar a i {
+    font-size: 24px;
+}
+
+.menu-bar a:hover {
+    color: #f0f0f0;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .menu-bar a {
+        font-size: 12px;
+    }
+
+    .menu-bar a i {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .menu-bar {
+        padding: 8px 0;
+    }
+
+    .menu-bar a {
+        font-size: 10px;
+    }
+
+    .menu-bar a i {
+        font-size: 18px;
+    }
+}
+
+.qr-code {
+    display: none;
+    margin-top: 10px;
+}
+
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="max-width">
+                <div class="logo"><a href="#">Canteen</a></div>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <section class="orders">
+            <h1>My Orders</h1>
+            <ul id="order-list">
+                <!-- Ordered items will appear here -->
+            </ul>
+        </section>
+    </main>
+    <div class="menu-bar">
+        <a href="index.html">
+            <i class='bx bx-home'></i>
+            <span>Home</span>
+        </a>
+        <a href="product.html">
+            <i class='bx bx-cart'></i>
+            <span>Products</span>
+        </a>
+        <a href="myorder.html">
+            <i class='bx bx-receipt'></i>
+            <span>My Order</span>
+        </a>
+        <a href="profile.html">
+            <i class='bx bx-user'></i>
+            <span>Profile</span>
+        </a>
+    </div>
+    <script>
+        function displayOrders() {
+            const orderList = document.getElementById('order-list');
+            orderList.innerHTML = ''; // Clear the list before displaying
+            let orders = JSON.parse(localStorage.getItem('orders')) || [];
+            orders.forEach((order, index) => {
+                const listItem = document.createElement('li');
+                
+                // Display product, price, order time, and status
+                listItem.textContent = `${order.product} - $${order.price} - ${order.status} - Ordered at: ${order.orderTime}`;
+                
+                // If the payment is still pending, add a button to mark as paid
+                if (order.status === 'Awaiting Payment') {
+                    const payButton = document.createElement('button');
+                    payButton.textContent = 'Mark as Paid';
+                    payButton.onclick = function() {
+                        markAsPaid(index);
+                    };
+                    listItem.appendChild(payButton);
+                }
+    
+                orderList.appendChild(listItem);
+            });
+        }
+    
+        // Function to mark payment as paid
+        function markAsPaid(index) {
+            let orders = JSON.parse(localStorage.getItem('orders')) || [];
+            if (orders[index].status === 'Awaiting Payment') {
+                orders[index].status = 'Paid';
+                localStorage.setItem('orders', JSON.stringify(orders));
+                displayOrders(); // Update the order list
+            }
+        }
+    
+        // Display orders when the page loads
+        document.addEventListener('DOMContentLoaded', displayOrders);
+
+    </script>
+</body>
+</html>
+
